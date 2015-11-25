@@ -35,7 +35,7 @@ int max_freq = 16000;
 int bands = 25;
 int hz_per_band = max_freq / bands;
 
-float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,16000};
+float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,12000};
 
 int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int i,g;
@@ -51,7 +51,7 @@ void setup()
   minim = new Minim(this);
   port = new Serial(this, Serial.list()[3],19200); //set baud rate
  
-  player = minim.loadFile("jupiter.mp3");
+  player = minim.loadFile("jurassic.mp3");
  
   //in = minim.getLineIn(Minim.MONO,buffer_size,sample_rate);
  
