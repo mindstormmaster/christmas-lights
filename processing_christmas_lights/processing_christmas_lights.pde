@@ -29,13 +29,13 @@ float dB_scale = 2.0;  // pixels per dB
 int buffer_size = 1024;  // also sets FFT size (frequency resolution)
 float sample_rate = 44100;
 
-float spectrum_height = 40.0; // determines range of dB shown
+float spectrum_height = 30.0; // determines range of dB shown
 
 int max_freq = 16000;
 int bands = 25;
 int hz_per_band = max_freq / bands;
 
-float[] band_cutoffs = {0,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,10000,30000};
+float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,16000};
 
 int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int i,g;
@@ -51,7 +51,7 @@ void setup()
   minim = new Minim(this);
   port = new Serial(this, Serial.list()[3],19200); //set baud rate
  
-  player = minim.loadFile("raiders.mp3");
+  player = minim.loadFile("jupiter.mp3");
  
   //in = minim.getLineIn(Minim.MONO,buffer_size,sample_rate);
  
@@ -136,12 +136,11 @@ void draw()
     freq_array[j] = max(0, min(254, (int)freq_item));
   }
   
-  //send to serial
-  port.write(0xff); //write marker (0xff) for synchronization
-  
+  //send to serial  
   for(i=0; i<bands; i++){
     port.write((byte)(freq_array[i]));
   }
+  port.write(0xff); //write marker (0xff) for synchronization
   printArray(freq_array);
   //delay(2); //delay for safety
 }

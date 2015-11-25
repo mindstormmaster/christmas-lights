@@ -13,8 +13,8 @@ Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_GRB + NEO_KHZ800)
 //int array[BANDS] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 //int arraytemp[BANDS] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 // 25
-int array[BANDS] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-int arraytemp[BANDS] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 int i,j,k,r;
 
@@ -34,31 +34,23 @@ void setup ()
 void loop() {
   // put your main code here, to run repeatedly:
 
-  // say what you got:
-  incomingByte = Serial.read();
-  Serial.print("I received: ");
-  Serial.println(incomingByte, DEC);
+  if (Serial.readBytesUntil(0xff, array, BANDS+1) == BANDS+1) {
+      //switch case statement
+      for (j=0; j<BANDS; j++) {
+        if(array[j]!= arraytemp[j]){ 
+          uint32_t color = 0;
   
-  if (incomingByte == 0xff) {
-    for (i=0; i<BANDS; i++) {
-      array[i] = Serial.read();    
-    }
-    //switch case statement
-    for (j=0; j<BANDS; j++) {
-      if(array[j]!= arraytemp[j]){ 
-        uint32_t color = 0;
-
-        if (array[j] < 0xff) {
-          color = Wheel(array[j]);
-          leds.setPixelColor((j*SECTION_MULT)+0, color);
-          leds.setPixelColor((j*SECTION_MULT)+1, color);
-        } else {
-          color = 0x001100;
+          if (array[j] < 0xff) {
+            color = Wheel(array[j]);
+            leds.setPixelColor((j*SECTION_MULT)+0, color);
+            leds.setPixelColor((j*SECTION_MULT)+1, color);
+          } else {
+            color = 0x001100;
+          }
         }
+        arraytemp[j] = array[j];
       }
-      arraytemp[j] = array[j];
-    }
-    leds.show();  
+      leds.show();      
   }
 
   //delay(1);
