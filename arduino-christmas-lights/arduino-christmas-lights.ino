@@ -1,8 +1,8 @@
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 4
-#define BANDS 50
-#define SECTION_MULT 1
+#define BANDS 25
+#define SECTION_MULT 2
 #define LED_COUNT BANDS*SECTION_MULT
 
 // Create an instance of the Adafruit_NeoPixel class called "leds".
@@ -13,16 +13,23 @@ Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_RGB + NEO_KHZ800)
 //int array[BANDS] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 //int arraytemp[BANDS] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 // 50
-byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+//byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+//byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+// 25
+byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
 
 int i,j,k,r;
 
 int incomingByte = 0;
 
+unsigned long lastDataTime = -30*1000;
+
 void setup ()
 {  
-  Serial.begin(19200);
+  Serial.begin(38400);
   leds.begin();  // Call this to start up the LED strip.
   clearLEDs();   // This function, defined below, turns all LEDs off...
   leds.show();   // ...but the LEDs don't actually update until you call this.
@@ -34,7 +41,9 @@ void setup ()
 void loop() {
   // put your main code here, to run repeatedly:
 
-  if (Serial.readBytesUntil(0xff, array, BANDS+1) == BANDS+1) {
+  if (Serial.available() && Serial.readBytesUntil(0xff, array, BANDS+1) == BANDS+1) {
+      lastDataTime = millis();
+      
       //switch case statement
       for (j=0; j<BANDS; j++) {
         if(array[j] != arraytemp[j]){ 
@@ -42,14 +51,22 @@ void loop() {
   
           if (array[j] < 0xff) {
             color = rgb6level(array[j]);
-            for (k=0; k<SECTION_MULT; k++) {
-              setColorRgb6level((j*SECTION_MULT)+k, array[j]);
-            }
+
+            if (SECTION_MULT > 1) {
+              for (k=0; k<SECTION_MULT; k++) {
+                leds.setPixelColor((j*SECTION_MULT)+k, color);
+              }
+            } else {
+              leds.setPixelColor(j, color);
+            }            
           }
         }
         arraytemp[j] = array[j];
       }
       leds.show();      
+  } else if (millis() - lastDataTime > 30*1000) {
+    int steps = (millis() - lastDataTime) / 10;
+    wipe(steps);
   }
 }
 
@@ -62,12 +79,21 @@ void setColor(int color)
   }
 }
 
+void wipe(int startColor)
+{
+  for (int i=0; i<LED_COUNT; i++)
+  {
+    leds.setPixelColor(i, Wheel((startColor+i)%384));
+  }
+  leds.show();
+}
+
 void testPattern()
 {
   for (byte color = 0; color < 216; color++) {
     for (int i=0; i<LED_COUNT; i++)
     {
-      setColorRgb6level(i, color);
+      leds.setPixelColor(i, rgb6level(color));
     }
     leds.show();      
     delay(100);
@@ -75,18 +101,20 @@ void testPattern()
 }
 
 uint32_t rgb6level(byte WheelPos) {
-  int r = WheelPos/36 * 36;
-  int g = (WheelPos/6)%6 * 36;
-  int b = WheelPos%6 * 36;
+  int r = min(255, floor(WheelPos/36) * 36);
+  int g = min(255, floor((WheelPos/6)%6) * 36);
+  int b = min(255, WheelPos%6 * 36);
   return leds.Color(r, g, b);
 }
 
+/*
 void setColorRgb6level(int pos, byte WheelPos) {
   int r = min(255, floor(WheelPos/36) * 36);
   int g = min(255, floor((WheelPos/6)%6) * 36);
   int b = min(255, WheelPos%6 * 36);
   leds.setPixelColor(pos, r, g, b);
 }
+*/
 
 
 uint32_t convert8to24(byte WheelPos) {
@@ -109,7 +137,7 @@ uint32_t convert8to24fail(byte WheelPos) {
   return ret;
 }
 
-uint32_t Wheel(byte WheelPos) {
+uint32_t Wheel(int WheelPos) {
   if(WheelPos < 64) {
    return leds.Color(0, 255, WheelPos*4);
   } else if(WheelPos < 128) {
@@ -118,9 +146,15 @@ uint32_t Wheel(byte WheelPos) {
   } else if(WheelPos < 192) {
    WheelPos -= 128;
    return leds.Color(WheelPos*4, 0, 255);
-  } else {
+  } else if(WheelPos < 256) {
    WheelPos -= 192;
    return leds.Color(255, 0, 255-(WheelPos*4));
+  } else if(WheelPos < 320) {
+   WheelPos -= 256;
+   return leds.Color(255, WheelPos*4, 0);
+  } else if(WheelPos < 384) {
+   WheelPos -= 320;
+   return leds.Color(255-(WheelPos*4), 255, 0);
   }
 }
 
