@@ -29,7 +29,8 @@ float dB_scale = 2.0;  // pixels per dB
 int buffer_size = 1024;  // also sets FFT size (frequency resolution)
 float sample_rate = 44100;
 
-float spectrum_height = 30.0; // determines range of dB shown
+String SONG = "letitgo.mp3";
+float spectrum_height = 10.0; // determines range of dB shown
 
 int max_freq = 16000;
 int bands = 25;
@@ -38,6 +39,7 @@ int hz_per_band = max_freq / bands;
 float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,12000};
 
 int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int[] color_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int i,g;
 float f;
 
@@ -51,7 +53,7 @@ void setup()
   minim = new Minim(this);
   port = new Serial(this, Serial.list()[3],19200); //set baud rate
  
-  player = minim.loadFile("jurassic.mp3");
+  player = minim.loadFile(SONG);
  
   //in = minim.getLineIn(Minim.MONO,buffer_size,sample_rate);
  
@@ -114,37 +116,41 @@ void draw()
 // Amplitude Ranges  if else tree
   for(int j=0; j<bands; j++){    
     float freq_item = freq_height[j]; 
-    /*
-    if (freq_item > 200){freq_array[j] = 15;}
-    else if (freq_item > 120){freq_array[j] = 14;}
-    else if (freq_item > 110){freq_array[j] = 13;}
-    else if (freq_item > 100){freq_array[j] = 12;}
-    else if (freq_item > 90){freq_array[j] = 11;}
-    else if (freq_item > 80){freq_array[j] = 10;}
-    else if (freq_item > 70){freq_array[j] = 9;}
-    else if (freq_item > 60){freq_array[j] = 8;}
-    else if (freq_item > 50){freq_array[j] = 7;}
-    else if (freq_item > 40){freq_array[j] = 6;}
-    else if (freq_item > 30){freq_array[j] = 5;}
-    else if (freq_item > 25){freq_array[j] = 4;}
-    else if (freq_item > 10){freq_array[j] = 3;}
-    else if (freq_item > 5){freq_array[j] = 2;}
-    else if (freq_item > 1 ){freq_array[j] = 1;}
-    else {freq_array[j] = 0;}  
-    */
     
-    freq_array[j] = max(0, min(254, (int)freq_item));
+    
+    int wheelPos = max(0, min(240, (int)freq_item));
+    color_array[j] = Wheel(wheelPos);
+    freq_array[j] = wheelPos;
   }
   
   //send to serial  
   for(i=0; i<bands; i++){
-    port.write((byte)(freq_array[i]));
+    port.write((byte)(color_array[i]));
   }
   port.write(0xff); //write marker (0xff) for synchronization
   printArray(freq_array);
   //delay(2); //delay for safety
 }
+
  
+int Wheel(int WheelPos) {
+  if(WheelPos < 60) {
+   return encode6level(0, 5, WheelPos/10);
+  } else if(WheelPos < 120) {
+   WheelPos -= 60;
+   return encode6level(0, 5-(WheelPos/10), 5);
+  } else if(WheelPos < 180) {
+   WheelPos -= 120;
+   return encode6level(WheelPos/10, 0, 5);
+  } else {
+   WheelPos -= 180;
+   return encode6level(5, 0, 5-(WheelPos/10));
+  }
+} 
+
+int encode6level(int r, int g, int b) {
+  return r*36+g*6+b; 
+}
  
 void stop()
 {
