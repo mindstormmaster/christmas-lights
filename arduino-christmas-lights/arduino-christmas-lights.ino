@@ -50,7 +50,7 @@ void loop() {
           uint32_t color = 0;
   
           if (array[j] < 0xff) {
-            color = rgb6level(array[j]);
+            color = rgb6levelWhite(array[j]);
 
             if (SECTION_MULT > 1) {
               for (k=0; k<SECTION_MULT; k++) {
@@ -105,6 +105,20 @@ uint32_t rgb6level(byte WheelPos) {
   int g = min(255, floor((WheelPos/6)%6) * 36);
   int b = min(255, WheelPos%6 * 36);
   return leds.Color(r, g, b);
+}
+
+uint32_t rgb6levelWhite(byte WheelPos) {
+  if (WheelPos < 33) {
+    return leds.Color(0, 0, 0);
+  } else if (WheelPos < 90) {
+    return leds.Color(10, 10, 10);
+  } else if (WheelPos < 120) {
+    return leds.Color(60, 60, 60);
+  } else if (WheelPos < 160) {
+    return leds.Color(120, 120, 120);
+  } else {
+    return leds.Color(255, 255, 255);
+  }
 }
 
 /*

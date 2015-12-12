@@ -29,7 +29,17 @@ float dB_scale = 2.0;  // pixels per dB
 int buffer_size = 1024;  // also sets FFT size (frequency resolution)
 float sample_rate = 44100;
 
-String SONG = "running.mp3";
+String SONG = "lovedrug.mp3";
+
+String[] songs = {
+  "lovedrug.mp3",
+  "running.mp3",
+  "starwars.mp3",
+  "raiders.mp3"
+};
+int songidx = 0;
+
+
 float spectrum_height = 10.0; // determines range of dB shown
 
 int max_freq = 16000;
@@ -54,7 +64,7 @@ void setup()
   minim = new Minim(this);
   port = new Serial(this, Serial.list()[3],38400); //set baud rate
  
-  player = minim.loadFile(SONG);
+  player = minim.loadFile(songs[songidx]);
  
   //in = minim.getLineIn(Minim.MONO,buffer_size,sample_rate);
  
@@ -168,6 +178,14 @@ void draw()
   String joinedNumbers = join(nf(color_array, 2), " "); 
   println(joinedNumbers);  // Prints "8, 67, 5"
   //delay(2); //delay for safety
+  
+  if (!player.isPlaying()) {
+    songidx++;
+    if (songidx < songs.length) {
+      player = minim.loadFile(songs[songidx]);
+      player.play();
+    }
+  }
 }
 
  
