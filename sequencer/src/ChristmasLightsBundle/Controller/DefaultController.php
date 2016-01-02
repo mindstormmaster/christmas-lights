@@ -143,7 +143,7 @@ class DefaultController extends Controller
 
 
     /**
-     * @Route("/song/{song_id}/processing.txt", name="song_keyframes")
+     * @Route("/song/{song_id}/processing.txt", name="song_processing")
      */
     public function outputProcessing(Request $request, $song_id)
     {

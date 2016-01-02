@@ -11,11 +11,21 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
     function($scope, $routeParams, $http, $filter) {
         $scope.songId = $routeParams.songId;
 
+        $scope.song = {
+            Offset: 8
+        };
+
         $http.get(window.urls.leds).success(function(data) {
             $scope.leds = data;
         });
         $http.get(window.urls.keyframes.replace('{song_id}', $scope.songId)).success(function(data) {
             $scope.keyframes = data;
+
+            var foo = [];
+            for (var i = 1; i <= Math.floor($scope.keyframes.length / 40); i++) {
+                foo.push(i);
+            }
+            $scope.measures = foo;
 
             $('#waveform').css('width', data.length*10+'px');
 

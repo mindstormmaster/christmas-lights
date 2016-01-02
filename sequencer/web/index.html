@@ -26,9 +26,12 @@
         }
 
 
+        table.sequencer td.waveform_container {
+            /*padding: 0;*/
+        }
         #waveform {
             width: 100%;
-            height: 100px;
+            height: 200px;
         }
 
         table.sequencer td:last-child, table.sequencer th:last-child {
@@ -39,10 +42,10 @@
             width: 10px;
             padding: 0;
             min-width: 10px;
-            border: none;
+            border: 1px solid #ccc;
         }
         table.sequencer tbody td:hover {
-            outline: 1px solid #fff;
+            border-color: #f00;
         }
     </style>
 
@@ -58,12 +61,12 @@
 
     <script>
         window.urls = {};
-        window.urls.songs =         '/app_dev.php/songs.json';
-        window.urls.leds =          '/app_dev.php/leds.json';
-        window.urls.keyframes =     '/app_dev.php/song/{song_id}/keyframes.json';
-        window.urls.led_keyframes = '/app_dev.php/song/{song_id}/leds.json';
-        window.urls.single_led =    '/app_dev.php/song/{song_id}/led/{led_id}.json';
-        window.urls.toggle_led =    '/app_dev.php/song/{song_id}/{timestamp}/{led_id}/toggleLed';
+        window.urls.songs =         '/songs.json';
+        window.urls.leds =          '/leds.json';
+        window.urls.keyframes =     '/song/{song_id}/keyframes.json';
+        window.urls.led_keyframes = '/song/{song_id}/leds.json';
+        window.urls.single_led =    '/song/{song_id}/led/{led_id}.json';
+        window.urls.toggle_led =    '/song/{song_id}/{timestamp}/{led_id}/toggleLed';
     </script>
 
     <script src="/bundles/christmaslights/bower_components/angular/angular.js"></script>
@@ -78,37 +81,9 @@
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Project name</a>
-        </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="../navbar/">Default</a></li>
-                <li><a href="../navbar-static-top/">Static top</a></li>
-                <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="#/songs">Home</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
