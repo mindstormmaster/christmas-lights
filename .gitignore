@@ -3,3 +3,4 @@ sequencer/.idea
 sequencer/.vagrant
 sequencer/node_modules
 Vagrantfile.local
+sequencer/src/ChristmasLightsBundle/Resources/public/bower_components
