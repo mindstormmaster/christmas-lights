@@ -5,6 +5,7 @@ namespace ChristmasLightsBundle\Controller;
 use ChristmasLightsBundle\Model\KeyframeLedQuery;
 use ChristmasLightsBundle\Model\KeyframeQuery;
 use ChristmasLightsBundle\Model\LedQuery;
+use ChristmasLightsBundle\Model\Song;
 use ChristmasLightsBundle\Model\SongQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -80,11 +81,25 @@ class DefaultController extends Controller
      */
     public function keyframesAction(Request $request, $song_id)
     {
-        $data = KeyframeQuery::create()
+        $song = SongQuery::create()
+            ->filterById($song_id)
+            ->findOne();
+
+        $keyframes = KeyframeQuery::create()
             ->filterBySongId($song_id)
             ->orderByTimestamp()
             ->find()
             ->toArray();
+
+        $data = array(
+            'song' => array(
+                'Id' => $song->getId(),
+                'Name' => $song->getName(),
+                'Offset' => $song->getOffset()
+            ),
+            'waveformData' => json_decode($song->getWaveformData()),
+            'keyframes' => $keyframes
+        );
 
         return new JsonResponse($data);
     }
@@ -159,19 +174,55 @@ class DefaultController extends Controller
 
         /** @var $frame Keyframe */
         foreach ($frames as $frame) {
-            $ledData = array_fill(0, 10, 0);
+            $code .= sprintf("delay(%d);", $frame->getTimestamp() - $timestamp - $arbitraryOffset);
+
+            $ledData = array_fill(0, LedQuery::create()->count(), 0);
+
+            $leds = $frame->getKeyframeLeds();
+            foreach ($leds as $l) {
+                $ledData[$l->getLedIndex()-1] = $l->getValue();
+            }
+            foreach ($ledData as $value) {
+                $code .= sprintf("port.write((byte)%d);", $value);
+            }
+
+            $code .= sprintf("port.write(0xff);");
+
+            $timestamp = $frame->getTimestamp();
+        }
+
+        $code = $this->generateSetColors($song_id);
+
+        // setColors(215,0,0,0,0);delay(230);
+        return new Response($code);
+    }
+
+    private function generateSetColors($song_id)
+    {
+        $arbitraryOffset = 4; // subtract 4 ms from each delay for some reason
+
+        $frames = KeyframeQuery::create()
+            ->filterBySongId($song_id)
+            ->orderByTimestamp()
+            ->find();
+
+        $timestamp = 0 - $arbitraryOffset;
+        $code = "";
+
+        /** @var $frame Keyframe */
+        foreach ($frames as $frame) {
+            $ledData = array_fill(0, LedQuery::create()->count(), 0);
 
             $leds = $frame->getKeyframeLeds();
             foreach ($leds as $l) {
                 $ledData[$l->getLedIndex()-1] = $l->getValue();
             }
 
-            $code .= sprintf("delay(%d);setColors(%s);\n", $frame->getTimestamp() - $timestamp - $arbitraryOffset, implode(", ", $ledData));
+            $code .= sprintf("delay(%d);setColors(%s);", $frame->getTimestamp() - $timestamp - $arbitraryOffset, implode(",", $ledData));
 
             $timestamp = $frame->getTimestamp();
         }
 
-        // setColors(215,0,0,0,0);delay(230);
-        return new Response($code);
+        return $code;
     }
 }

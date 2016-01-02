@@ -11,15 +11,13 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
     function($scope, $routeParams, $http, $filter) {
         $scope.songId = $routeParams.songId;
 
-        $scope.song = {
-            Offset: 8
-        };
-
         $http.get(window.urls.leds).success(function(data) {
             $scope.leds = data;
         });
         $http.get(window.urls.keyframes.replace('{song_id}', $scope.songId)).success(function(data) {
-            $scope.keyframes = data;
+            $scope.song = data.song;
+            $scope.waveformData = data.waveformData;
+            $scope.keyframes = data.keyframes;
 
             var foo = [];
             for (var i = 1; i <= Math.floor($scope.keyframes.length / 40); i++) {
@@ -27,7 +25,7 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
             }
             $scope.measures = foo;
 
-            $('#waveform').css('width', data.length*10+'px');
+            $('#waveform').css('width', $scope.keyframes.length*10+'px');
 
             var waveform = new Waveform({
                 container: document.getElementById("waveform"),
@@ -37,10 +35,6 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
         });
         $http.get(window.urls.led_keyframes.replace('{song_id}', $scope.songId)).success(function(data) {
             $scope.ledKeyframes = data;
-        });
-
-        $http.get('/lovedrug.json').success(function(data) {
-            $scope.waveformData = data;
         });
 
         $scope.keyframeValue = function(led, frame) {

@@ -14,6 +14,8 @@ CREATE TABLE `songs`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `delay` INTEGER DEFAULT 0 NOT NULL,
+    `offset` INTEGER DEFAULT 0 NOT NULL,
+    `waveform_data` TEXT,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
