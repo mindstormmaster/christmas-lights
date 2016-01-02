@@ -1,0 +1,16 @@
+<table class="table table-bordered sequencer">
+    <thead>
+    <tr>
+        <td>&nbsp;</td>
+        <td colspan="{{ keyframes.length }}"><div id="waveform"></div></td>
+        <td>&nbsp;</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="led in leds">
+        <td>{{ led.Name }}</td>
+        <td ng-repeat="frame in keyframes" style="{{ keyframeStyle(led, frame) }}" ng-click="toggleLed(led, frame)"></td>
+        <td>&nbsp;</td>
+    </tr>
+    </tbody>
+</table>

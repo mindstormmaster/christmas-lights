@@ -5,6 +5,8 @@
 #define SECTION_MULT 5
 #define LED_COUNT BANDS*SECTION_MULT
 
+#define SCREENSAVER_DELAY 600
+
 // Create an instance of the Adafruit_NeoPixel class called "leds".
 // That'll be what we refer to from here on...
 Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_RGB + NEO_KHZ800);
@@ -28,7 +30,7 @@ int i,j,k,r;
 
 int incomingByte = 0;
 
-unsigned long lastDataTime = -30*1000;
+unsigned long lastDataTime = 0*1000;
 
 void setup ()
 {  
@@ -49,7 +51,7 @@ void loop() {
       
       //switch case statement
       for (j=0; j<BANDS; j++) {
-        if(array[j] != arraytemp[j]){ 
+        if(true || array[j] != arraytemp[j]){ 
           uint32_t color = 0;
   
           if (array[j] < 0xff) {
@@ -67,7 +69,7 @@ void loop() {
         arraytemp[j] = array[j];
       }
       leds.show();      
-  } else if (millis() - lastDataTime > 30*1000) {
+  } else if (millis() - lastDataTime > SCREENSAVER_DELAY*1000) {
     int steps = (millis() - lastDataTime) / 10;
     wipe(steps);
   }

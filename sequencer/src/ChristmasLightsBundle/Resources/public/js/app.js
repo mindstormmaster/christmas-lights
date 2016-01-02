@@ -8,6 +8,10 @@ app.config(['$routeProvider', function ($routeProvider) {
             templateUrl: "/bundles/christmaslights/templates/song-list.html",
             controller: "SongListController"
         })
+        .when('/songs/:songId', {
+            templateUrl: '/bundles/christmaslights/templates/song-detail.html',
+            controller: 'SongDetailController'
+        })
         .otherwise({
             redirectTo: '/songs'
         });

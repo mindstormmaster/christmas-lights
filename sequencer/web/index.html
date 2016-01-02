@@ -24,6 +24,26 @@
             min-height: 2000px;
             padding-top: 70px;
         }
+
+
+        #waveform {
+            width: 100%;
+            height: 100px;
+        }
+
+        table.sequencer td:last-child, table.sequencer th:last-child {
+            width: auto;
+        }
+
+        table.sequencer tbody td, table.sequencer thead th {
+            width: 10px;
+            padding: 0;
+            min-width: 10px;
+            border: none;
+        }
+        table.sequencer tbody td:hover {
+            outline: 1px solid #fff;
+        }
     </style>
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -38,12 +58,17 @@
 
     <script>
         window.urls = {};
-        window.urls.songs = '/app_dev.php/songs.json';
-        window.urls.leds = '/app_dev.php/leds.json';
+        window.urls.songs =         '/app_dev.php/songs.json';
+        window.urls.leds =          '/app_dev.php/leds.json';
+        window.urls.keyframes =     '/app_dev.php/song/{song_id}/keyframes.json';
+        window.urls.led_keyframes = '/app_dev.php/song/{song_id}/leds.json';
+        window.urls.single_led =    '/app_dev.php/song/{song_id}/led/{led_id}.json';
+        window.urls.toggle_led =    '/app_dev.php/song/{song_id}/{timestamp}/{led_id}/toggleLed';
     </script>
 
     <script src="/bundles/christmaslights/bower_components/angular/angular.js"></script>
     <script src="/bundles/christmaslights/bower_components/angular-route/angular-route.js"></script>
+    <script src="/bundles/christmaslights/js/waveform.js"></script>
     <script src="/bundles/christmaslights/js/app.js"></script>
     <script src="/bundles/christmaslights/js/controllers/song-list-controller.js"></script>
 </head>
@@ -101,5 +126,6 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="/js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </body>
 </html>

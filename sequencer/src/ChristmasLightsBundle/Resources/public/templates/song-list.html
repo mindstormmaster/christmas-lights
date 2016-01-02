@@ -6,7 +6,7 @@
     </thead>
     <tbody>
         <tr ng-repeat="song in songs">
-            <td>{{ song.Name }}</td>
+            <td><a href="#/songs/{{song.Id}}">{{ song.Name }}</a></td>
         </tr>
     </tbody>
 </table>
