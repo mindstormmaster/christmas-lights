@@ -1,7 +1,0 @@
-#
-# This file contains your GitHub OAuth token.  This is specific to you and should not be shared.
-#
-# Generate a token by going to https://github.com/settings/applications and clicking "Generate new token".
-# The token only needs the "repo" scope.
-#
-composer_github_oauth = "83199f96d0a15f5b43d0c5925dfb5e571d35600d"

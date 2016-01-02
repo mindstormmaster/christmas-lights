@@ -2,3 +2,4 @@
 sequencer/.idea
 sequencer/.vagrant
 sequencer/node_modules
+Vagrantfile.local
