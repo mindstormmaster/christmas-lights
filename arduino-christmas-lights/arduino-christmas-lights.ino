@@ -1,8 +1,8 @@
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 4
-#define BANDS 25
-#define SECTION_MULT 2
+#define BANDS 10
+#define SECTION_MULT 5
 #define LED_COUNT BANDS*SECTION_MULT
 
 // Create an instance of the Adafruit_NeoPixel class called "leds".
@@ -17,9 +17,12 @@ Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_RGB + NEO_KHZ800)
 //byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 // 25
-byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+//byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+//byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
+// 10
+byte array[BANDS+1] =    {0,0,0,0,0,0,0,0,0,0,0};
+byte arraytemp[BANDS+1] ={0,0,0,0,0,0,0,0,0,0,0};
 
 int i,j,k,r;
 
@@ -108,7 +111,7 @@ uint32_t rgb6level(byte WheelPos) {
 }
 
 uint32_t rgb6levelWhite(byte WheelPos) {
-  if (WheelPos < 33) {
+  if (WheelPos < 10) {
     return leds.Color(0, 0, 0);
   } else if (WheelPos < 90) {
     return leds.Color(10, 10, 10);

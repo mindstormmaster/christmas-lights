@@ -29,11 +29,11 @@ float dB_scale = 2.0;  // pixels per dB
 int buffer_size = 1024;  // also sets FFT size (frequency resolution)
 float sample_rate = 44100;
 
-String SONG = "lovedrug.mp3";
+String SONG = "running.mp3";
 
 String[] songs = {
-  "lovedrug.mp3",
   "running.mp3",
+  "lovedrug.mp3",
   "starwars.mp3",
   "raiders.mp3"
 };
@@ -43,13 +43,18 @@ int songidx = 0;
 float spectrum_height = 10.0; // determines range of dB shown
 
 int max_freq = 16000;
-int bands = 25;
-int leds = 25;
+int bands = 10;
+int leds = 10;
 int hz_per_band = max_freq / bands;
 
-float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,12000};
+//float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,12000};
+//int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+float[] band_cutoffs = {20,63,125,200,315,500,800,1250,2000,4000,8000};
+int[] freq_array = {0,0,0,0,0,0,0,0,0,0};
+
+
 int[] color_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int i,g;
 float f;
@@ -79,48 +84,95 @@ void setup()
   peaks = new float[peaksize];
   peak_age = new int[peaksize];
   
+  sendToSerial(freq_array);
+  sendToSerial(freq_array);
+  sendToSerial(freq_array);
+  
   player.play();
+  sendToSerial(freq_array);
 
+  //delay(320);
+  //custom();
 
 }
 
-
-void custom()
+void setColors(int c1, int c2, int c3, int c4, int c5) 
 {
-setColors(0);delay(40);
-setColors(215);delay(160);
-setColors(0);delay(240);
-setColors(215);delay(40);
-setColors(0);delay(160);
-setColors(215);delay(40);
-setColors(0);delay(2280);
-setColors(215);delay(80);
-setColors(0);delay(80);
-setColors(215);delay(2680);
-setColors(0);delay(800);
-setColors(215);delay(300);
-setColors(215);delay(8380);
-setColors(0);
-exit();  
-}
-
-void setColors(int c) 
-{
-  //send to serial  
-  for(i=0; i<bands; i++){
-    freq_array[i] = c;
-    color_array[i] = c;
-    port.write((byte)(color_array[i]));
-  }
+  port.write((byte)c1);
+  port.write((byte)c1);
+  port.write((byte)c2);
+  port.write((byte)c2);
+  port.write((byte)c3);
+  port.write((byte)c3);
+  port.write((byte)c4);
+  port.write((byte)c4);
+  port.write((byte)c5);
+  port.write((byte)c5);
   port.write(0xff); //write marker (0xff) for synchronization
   String joinedNumbers = join(nf(color_array, 2), " "); 
   println(joinedNumbers);  // Prints "8, 67, 5"
-  
-  
+}
+
+void custom()
+{
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(215,215,215,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(215,215,215,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(215,215,215,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(215,215,215,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(215,215,215,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(0,215,0,0,0);delay(230);
+setColors(0,215,0,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,215,0,0,0);delay(230);
+setColors(215,215,215,0,0);delay(230);
+setColors(0,0,0,0,0);delay(230);
+setColors(0,215,0,0,0);delay(230);
+setColors(0,0,215,0,0);delay(230);
+setColors(0,0,215,0,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+setColors(0,0,0,0,215);delay(230);
+setColors(0,0,0,0,215);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(0,215,0,0,0);delay(230);
+setColors(0,0,215,0,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(215,0,0,0,0);delay(230);
+setColors(0,215,0,0,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+setColors(0,0,0,215,0);delay(230);
+exit();  
 }
 
 
-void other()
+
+
+void draw2()
 {
 return;
 }
@@ -161,21 +213,18 @@ void draw()
   
 // Frequency Band Ranges      
   for(int j=0; j<bands; j++){
-    freq_height[j] = fft.calcAvg(band_cutoffs[bands-j-1], band_cutoffs[bands-j]) * spectrum_height;
+    freq_height[j] = fft.calcAvg(band_cutoffs[j], band_cutoffs[j+1]) * spectrum_height;
     float freq_item = freq_height[j]; 
     
     
     int wheelPos = max(0, min(240, (int)freq_item));
-    color_array[j] = Wheel(wheelPos);
+    //color_array[j] = Wheel(wheelPos);
+    color_array[j] = wheelPos;
     freq_array[j] = wheelPos;
   }
   
-  //send to serial  
-  for(i=0; i<leds; i++){
-    port.write((byte)(color_array[i]));
-  }
-  port.write(0xff); //write marker (0xff) for synchronization
-  String joinedNumbers = join(nf(color_array, 2), " "); 
+  sendToSerial(freq_array);
+  String joinedNumbers = join(nf(freq_array, 2), " "); 
   println(joinedNumbers);  // Prints "8, 67, 5"
   //delay(2); //delay for safety
   
@@ -186,6 +235,15 @@ void draw()
       player.play();
     }
   }
+}
+
+void sendToSerial(int[] freq_array)
+{
+  //send to serial  
+  for(i=0; i<leds; i++){
+    port.write((byte)(freq_array[i]));
+  }
+  port.write(0xff); //write marker (0xff) for synchronization  
 }
 
  
