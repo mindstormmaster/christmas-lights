@@ -1,2 +1,4 @@
 *.mp3
 sequencer/.idea
+sequencer/.vagrant
+sequencer/node_modules

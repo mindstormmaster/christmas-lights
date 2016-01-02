@@ -4,9 +4,11 @@
 parameters:
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
+    database_name:     sequencer
+    database_user:     sequencer
+    database_password: sequencer
+    database_driver:   pdo_mysql
+    database_charset:  utf8
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
 
