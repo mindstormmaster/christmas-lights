@@ -11,6 +11,9 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
     function($scope, $routeParams, $http, $filter) {
         $scope.songId = $routeParams.songId;
 
+        $scope.timestampOffset = 0;
+        $scope.width = 1;
+
         $http.get(window.urls.leds).success(function(data) {
             $scope.leds = data;
         });
@@ -54,13 +57,21 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
         };
 
         $scope.toggleLed = function(led, frame) {
-            $http.get(window.urls.toggle_led
-                .replace('{song_id}', $scope.songId)
-                .replace('{timestamp}', frame.Timestamp)
-                .replace('{led_id}', led.Id)
-            ).success(function(data) {
-                $scope.refreshLedFrames(led);
-            });
+            var ts = frame.Timestamp;
+            for (var i = 0; i < $scope.width; i++) {
+                var r = $http.get(window.urls.toggle_led
+                    .replace('{song_id}', $scope.songId)
+                    .replace('{timestamp}', ts)
+                    .replace('{led_id}', led.Id)
+                );
+                if (i+1 == $scope.width) {
+                    r.success(function(data) {
+                        $scope.refreshLedFrames(led);
+                    });
+                }
+
+                ts += parseInt($scope.timestampOffset);
+            }
         };
 
         $scope.refreshLedFrames = function(led) {
