@@ -33,6 +33,9 @@ String SONG = "running.mp3";
 
 String[] songs = {
   "lovedrug.mp3",
+  "lovedrug-1.mp3",
+  "joy.mp3",
+  "jurassic.mp3",
   "running.mp3",
   "starwars.mp3",
   "raiders.mp3"
@@ -44,15 +47,15 @@ float spectrum_height = 10.0; // determines range of dB shown
 
 int max_freq = 16000;
 int bands = 25;
-int leds = 50;
+int leds = 25;
 int hz_per_band = max_freq / bands;
 
-//float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,12000};
-//int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+float[] band_cutoffs = {20,25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,12000};
+int[] freq_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
-float[] band_cutoffs = {20,63,125,200,315,500,800,1250,2000,4000,8000};
-int[] freq_array = {0,0,0,0,0,0,0,0,0,0};
+//float[] band_cutoffs = {20,63,125,200,315,500,800,1250,2000,4000,8000};
+//int[] freq_array = {0,0,0,0,0,0,0,0,0,0};
 
 
 int[] color_array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -98,16 +101,16 @@ void setup()
 
 void setColors10(int c1, int c2, int c3, int c4, int c5, int c6, int c7, int c8, int c9, int c10)
 {
-  port.write((byte)c1);port.write((byte)c1);port.write((byte)c1);port.write((byte)c1);port.write((byte)c1);
-  port.write((byte)c2);port.write((byte)c2);port.write((byte)c2);port.write((byte)c2);port.write((byte)c2);
-  port.write((byte)c3);port.write((byte)c3);port.write((byte)c3);port.write((byte)c3);port.write((byte)c3);
-  port.write((byte)c4);port.write((byte)c4);port.write((byte)c4);port.write((byte)c4);port.write((byte)c4);
-  port.write((byte)c5);port.write((byte)c5);port.write((byte)c5);port.write((byte)c5);port.write((byte)c5);
-  port.write((byte)c6);port.write((byte)c6);port.write((byte)c6);port.write((byte)c6);port.write((byte)c6);
-  port.write((byte)c7);port.write((byte)c7);port.write((byte)c7);port.write((byte)c7);port.write((byte)c7);
-  port.write((byte)c8);port.write((byte)c8);port.write((byte)c8);port.write((byte)c8);port.write((byte)c8);
-  port.write((byte)c9);port.write((byte)c9);port.write((byte)c9);port.write((byte)c9);port.write((byte)c9);
-  port.write((byte)c10);port.write((byte)c10);port.write((byte)c10);port.write((byte)c10);port.write((byte)c10);
+  port.write((byte)c1);port.write((byte)c1);port.write((byte)c1);
+  port.write((byte)c2);port.write((byte)c2);
+  port.write((byte)c3);port.write((byte)c3);port.write((byte)c3);
+  port.write((byte)c4);port.write((byte)c4);
+  port.write((byte)c5);port.write((byte)c5);port.write((byte)c5);
+  port.write((byte)c6);port.write((byte)c6);
+  port.write((byte)c7);port.write((byte)c7);port.write((byte)c7);
+  port.write((byte)c8);port.write((byte)c8);
+  port.write((byte)c9);port.write((byte)c9);port.write((byte)c9);
+  port.write((byte)c10);port.write((byte)c10);
   
   port.write(0xff); //write marker (0xff) for synchronization
   String joinedNumbers = join(nf(color_array, 2), " "); 
