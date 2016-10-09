@@ -7,12 +7,12 @@
     </tr>
     <tr>
         <td>&nbsp;</td>
-        <td colspan="{{ song.Offset }}">&nbsp;</td>
-        <td colspan="10" ng-repeat-start="i in measures">{{ i }}</td>
-        <td colspan="10"></td>
-        <td colspan="10"></td>
-        <td colspan="10" ng-repeat-end></td>
-        <td colspan="{{ (keyframes.length - song.Offset) % 40 }}"></td>
+        <td ng-if="song.Offset > 0" colspan="{{ song.Offset }}">&nbsp;</td>
+        <td colspan="{{ framesPerBeat }}" ng-repeat-start="i in measures">{{ i }}</td>
+        <td colspan="{{ framesPerBeat }}"></td>
+        <td colspan="{{ framesPerBeat }}"></td>
+        <td colspan="{{ framesPerBeat }}" ng-repeat-end></td>
+        <td colspan="{{ (keyframes.length - song.Offset) % (4*framesPerBeat) }}"></td>
         <td>&nbsp;</td>
     </tr>
     </thead>

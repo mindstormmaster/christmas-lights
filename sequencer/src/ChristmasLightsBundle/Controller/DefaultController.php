@@ -57,12 +57,16 @@ class DefaultController extends Controller
      */
     public function keyframesInitAction(Request $request, $song_id)
     {
-        $duration = 76.564896;
+        $duration = 130.847351;
+
+        $bpm = 156;
+
+        $frameDuration = 60000.0/$bpm/4;
 
         $keyframes = [];
 
         // milliseconds in 40ms increments
-        for ($i = 0; $i < $duration * 1000; $i += 46) {
+        for ($i = 0; $i < $duration * 1000; $i += $frameDuration) {
             $frame = KeyframeQuery::create()
                 ->filterBySongId($song_id)
                 ->filterByTimestamp($i)
@@ -95,7 +99,8 @@ class DefaultController extends Controller
             'song' => array(
                 'Id' => $song->getId(),
                 'Name' => $song->getName(),
-                'Offset' => $song->getOffset()
+                'Offset' => $song->getOffset(),
+                'FramesPerBeat' => $song->getFramesPerBeat()
             ),
             'waveformData' => json_decode($song->getWaveformData()),
             'keyframes' => $keyframes
@@ -206,8 +211,15 @@ class DefaultController extends Controller
             ->orderByTimestamp()
             ->find();
 
+        $song = SongQuery::create()
+            ->findOneById($song_id);
+
         $timestamp = 0 - $arbitraryOffset;
         $code = "";
+
+        $code .= sprintf("player.pause();\n");
+        $code .= sprintf("player = minim.loadFile(\"%s\");\n", $song->getName());
+        $code .= sprintf("player.play();\n\n");
 
         /** @var $frame Keyframe */
         foreach ($frames as $frame) {

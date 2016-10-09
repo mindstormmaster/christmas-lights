@@ -19,16 +19,23 @@ christmaslightsControllers.controller('SongDetailController', ['$scope', '$route
         });
         $http.get(window.urls.keyframes.replace('{song_id}', $scope.songId)).success(function(data) {
             $scope.song = data.song;
+            $scope.framesPerBeat = data.song.FramesPerBeat;
             $scope.waveformData = data.waveformData;
             $scope.keyframes = data.keyframes;
 
+            console.log(data.song);
+
+            window.waveformData = data.waveformData;
+
             var foo = [];
-            for (var i = 1; i <= Math.floor($scope.keyframes.length / 40); i++) {
+            for (var i = 1; i <= Math.floor($scope.keyframes.length / 4*$scope.framesPerBeat); i++) {
                 foo.push(i);
             }
             $scope.measures = foo;
 
-            $('#waveform').css('width', $scope.keyframes.length*10+'px');
+            console.log($scope.waveformData.left);
+
+            $('#waveform').css('width', $scope.keyframes.length*$scope.framesPerBeat+'px');
 
             var waveform = new Waveform({
                 container: document.getElementById("waveform"),

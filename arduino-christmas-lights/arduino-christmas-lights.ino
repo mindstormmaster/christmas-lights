@@ -1,11 +1,11 @@
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 4
+#define PIN 3
 #define BANDS 25
 #define SECTION_MULT 2
 #define LED_COUNT BANDS*SECTION_MULT
 
-#define SCREENSAVER_DELAY 600
+#define SCREENSAVER_DELAY 10
 
 // Create an instance of the Adafruit_NeoPixel class called "leds".
 // That'll be what we refer to from here on...
@@ -34,7 +34,7 @@ unsigned long lastDataTime = 0*1000;
 
 void setup ()
 {  
-  Serial.begin(38400);
+  Serial.begin(9600);
   leds.begin();  // Call this to start up the LED strip.
   clearLEDs();   // This function, defined below, turns all LEDs off...
   leds.show();   // ...but the LEDs don't actually update until you call this.
@@ -113,16 +113,34 @@ uint32_t rgb6level(byte WheelPos) {
 }
 
 uint32_t rgb6levelWhite(byte WheelPos) {
+
+  if (WheelPos < 10) {
+    return leds.Color(0, 0, 0);
+  } else if (WheelPos < 160) {
+    return leds.Color(WheelPos, WheelPos, WheelPos);
+  } else {
+    return leds.Color(WheelPos*0.9, WheelPos*0.9, WheelPos*0.9);
+  }
+
+  
   if (WheelPos < 10) {
     return leds.Color(0, 0, 0);
   } else if (WheelPos < 90) {
-    return leds.Color(10, 10, 10);
+    float pct = WheelPos-10/80.0;
+    int color = 10*pct;
+    return leds.Color(color, color, color);
   } else if (WheelPos < 120) {
-    return leds.Color(60, 60, 60);
+    float pct = WheelPos-90/30.0;
+    int color = 10+50*pct;
+    return leds.Color(color, color, color);
   } else if (WheelPos < 160) {
-    return leds.Color(120, 120, 120);
+    float pct = WheelPos-120/40.0;
+    int color = 60+60*pct;
+    return leds.Color(color, color, color);
   } else {
-    return leds.Color(255, 255, 255);
+    float pct = WheelPos-160/80.0;
+    int color = 120+100*pct;
+    return leds.Color(color, color, color);
   }
 }
 

@@ -6,6 +6,7 @@
         <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
         <column name="delay" phpName="Delay" type="INTEGER" required="true" default="0"/>
         <column name="offset" phpName="Offset" type="INTEGER" required="true" default="0"/>
+        <column name="frames_per_beat" phpName="FramesPerBeat" type="INTEGER" required="true" default="0"/>
         <column name="waveform_data" phpName="WaveformData" type="LONGVARCHAR" required="false"/>
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
